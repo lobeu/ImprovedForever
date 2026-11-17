@@ -216,6 +216,12 @@ function GD.QuestName(questID)
     return QuestField(questID, "name")
 end
 
+-- The quest's level (QuestieDB's questLevel), nil when unknown
+function GD.QuestLevel(questID)
+    local v = QuestField(questID, "questLevel")
+    return type(v) == "number" and v > 0 and v or nil
+end
+
 -- The NPC that gives the quest (the first creature in startedBy), nil when an object or item does
 function GD.QuestGiverNpc(questID)
     local by = QuestField(questID, "startedBy")
