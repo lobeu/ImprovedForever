@@ -171,6 +171,8 @@ function GD.ItemQuests(itemID)
     local Q = GD.Q()
     if not Q then return nil end
     local starts, related = GD.Field(Q.Item, itemID, "startQuest"), GD.Field(Q.Item, itemID, "relatedQuests")
+    -- (QuestieDB writes "none" as 0: no quest, ours asked instead)
+    if starts == 0 then starts = nil end
     local B = Ours()
     if B and B ~= Q then
         starts = starts or GD.Field(B.Item, itemID, "startQuest")
@@ -187,6 +189,15 @@ function GD.ItemQuests(itemID)
             end
             related = all
         end
+    end
+    -- (QuestieDB writes "none" as 0: no quest)
+    if starts == 0 then starts = nil end
+    if related then
+        local real = {}
+        for _, q in ipairs(related) do
+            if q and q ~= 0 then real[#real + 1] = q end
+        end
+        related = #real > 0 and real or nil
     end
     return starts, related
 end
